@@ -1,4 +1,16 @@
 body {
-    background-color: powderblue;
-    min-width: 300px;
+    background-color: cornflowerblue;
+    min-width: 100px;
+}
+
+h1 {
+    color: gold;
+}
+
+p {
+    color: grey;
+}
+
+body #trigger {
+    background-color: red;
 }

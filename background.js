@@ -1,6 +1,6 @@
 // import { Content } from "./lists/blackList/oisd_dbl_basic.json";
 
-let blockerUrls = 0;
+let countBlockedUrls = 0;
 let blockerActive = true;
 
 const triggerBlocking = function () {
@@ -32,7 +32,7 @@ const triggerBlocking = function () {
          * Parsing to regex
          */
         blackList = JSON.parse(response);
-        console.log("Number of urls to block :", blackList.length);
+        console.log("Number of urls to block : ", blackList.length);
         blackList = blackList.map((element) => `*://${element}/*`);
 
         return blackList;
@@ -51,6 +51,9 @@ const triggerBlocking = function () {
 };
 
 const requestListener = function (details) {
+  ++countBlockedUrls;
+  chrome.browserAction.setBadgeText({ text: countBlockedUrls.toString() });
+  // console.log("Total URL blocked : ", JSON.stringify(countBlockedUrls));
   console.log("URL blocked : ", JSON.stringify(details.url));
   return { cancel: true };
 };
