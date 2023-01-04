@@ -1,9 +1,12 @@
 // import { Content } from "./lists/blackList/oisd_dbl_basic.json";
 
 let countBlockedUrls = 0;
-let blockerActive = true;
+let isBlockerActive = true;
 
-const triggerBlocking = function () {
+const enableBlocking = function () {
+  countBlockedUrls = 0;
+  isBlockerActive = true;
+
   fetch("https://dbl.oisd.nl/basic/")
     .then((response) => response.text())
     .then((response) => {
@@ -58,4 +61,21 @@ const requestListener = function (details) {
   return { cancel: true };
 };
 
-triggerBlocking();
+function disableAdBlocking() {
+  isAdBlockingActive = false;
+  chrome.browserAction.setBadgeText({ text: "OFF" });
+  chrome.webRequest.onBeforeRequest.removeListener(block);
+}
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if ("toggleAdBlocking" in request) {
+    if (isBlockerActive) {
+      disableAdBlocking();
+    } else {
+      enableAdBlocking();
+    }
+    sendResponse({ state: isBlockerActive });
+  }
+});
+
+enableBlocking();
